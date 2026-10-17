@@ -62,6 +62,12 @@ describe('evidence URL validation', () => {
     expect(isSafeEvidenceUrl('  https://example.com/ok  ')).toBe(true)
   })
 
+  it('rejects explicit control-byte escapes (0x00-0x1f, 0x7f)', () => {
+    expect(isSafeEvidenceUrl('https://example.com/\x00')).toBe(false)
+    expect(isSafeEvidenceUrl('https://example.com/\x1f')).toBe(false)
+    expect(isSafeEvidenceUrl('https://example.com/\x7f')).toBe(false)
+  })
+
   it('allows query strings and fragments', () => {
     expect(isSafeEvidenceUrl('https://example.com/search?q=test&page=1')).toBe(true)
     expect(isSafeEvidenceUrl('https://example.com/#section')).toBe(true)
